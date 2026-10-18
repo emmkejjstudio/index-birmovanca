@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Index birmovanca</title>
+<style>
+body{margin:0;background:#f6f2f1;color:#2a1a20;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+main{max-width:520px;margin:0 auto;padding:36px 20px}
+h1{font-family:Georgia,serif;color:#8a2646;font-size:38px;margin:0 0 6px}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#74636a}
+.card{background:#fffdfc;border:1px solid #e3d8da;border-radius:14px;padding:16px;margin:18px 0}
+.btn{display:block;text-align:center;background:#8a2646;color:#fff;border-radius:10px;padding:14px 16px;font-weight:600;text-decoration:none;margin:10px 0}
+.btn.ghost{background:transparent;color:#8a2646;border:1px solid #8a2646}
+.code{font-family:ui-monospace,Menlo,monospace;font-size:26px;font-weight:700;letter-spacing:.08em;text-align:center;background:#f6f2f1;border-radius:10px;padding:10px}
+small{color:#74636a}
+a{color:#8a2646}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Farnosť · príprava na birmovku</div>
+  <h1>Index birmovanca</h1>
+  <p>Digitálny index birmovanca: účasť na omšiach, služby, sviatosť zmierenia a 7 darov. Záznamy potvrdzuje kaplan.</p>
+  <div class="card" id="join" hidden>
+    <b id="what">Pripojenie do farnosti</b>
+    <p id="how">Nainštaluj aplikáciu a v nej sa pripoj do svojej skupiny.</p>
+    <div class="code" id="code"></div>
+  </div>
+  <a class="btn" id="open" href="#">Otvoriť / nainštalovať aplikáciu</a>
+  <a class="btn ghost" id="store" href="#">Google Play</a>
+  <p id="note"><small>Aplikácia je pre telefóny s Androidom. Ak už aplikáciu máš, tlačidlo ju otvorí. Ak nie, ponúkne ti inštaláciu z Google Play. Potom v aplikácii ťukni na Som birmovanec a zadaj kód farnosti.</small></p>
+  <p><small><a href="privacy.html">Zásady ochrany súkromia</a></small></p>
+</main>
+<script>
+(function(){
+  var PKG='sk.indexbirmovanca.app', PLAY='https://play.google.com/store/apps/details?id='+PKG, SCHEME='indexbirmovanca';
+  var q={}; location.search.replace(/^\?/,'').split('&').forEach(function(kv){var a=kv.split('=');if(a[0])q[a[0]]=decodeURIComponent(a[1]||'')});
+  var p=(q.p||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  var qs=''; if(p){qs='?p='+encodeURIComponent(p); if(q.i)qs+='&i='+encodeURIComponent(q.i); if(q.m)qs+='&m=1';}
+  var android=/Android/i.test(navigator.userAgent);
+  var open=document.getElementById('open'), store=document.getElementById('store');
+  store.href=PLAY;
+  if(p){
+    document.getElementById('join').hidden=false;
+    document.getElementById('code').textContent=p.replace(/(.{4})(?=.)/g,'$1-');
+    if(q.i){document.getElementById('what').textContent='Pozvánka pre animátora';document.getElementById('how').textContent='Nainštaluj aplikáciu, ťukni na Som animátor a naskenuj pozvánku znova.';}
+    else if(q.m){document.getElementById('what').textContent='Kód zo sakristie';document.getElementById('how').textContent='Tento kód skenuj priamo v aplikácii (Index → Skenovať QR kód).';}
+  }
+  if(android){
+    open.href='intent://open'+qs+'#Intent;scheme='+SCHEME+';package='+PKG+';S.browser_fallback_url='+encodeURIComponent(PLAY)+';end';
+    if(p && !q.m){ setTimeout(function(){ location.href=open.href; },400); }
+  } else {
+    open.href=PLAY; open.textContent='Zobraziť v Google Play';
+    document.getElementById('note').innerHTML='<small>Aplikácia je zatiaľ len pre telefóny s Androidom. Otvor tento odkaz v telefóne.</small>';
+  }
+})();
+</script>
+</body>
+</html>
